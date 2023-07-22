@@ -1,12 +1,16 @@
 #include "main.h"
 
 /**
- * get-precision - gets the precision form the format string
- * @p: the format string
- * @params: the parameters struct
- * @ap: the argument pointer
+ * get_precision - Gets the precision from the format string.
  *
- * Return: new pointer
+ * This function parses the format string to extract the precision value
+ * and updates the `params` struct with the obtained precision.
+ *
+ * @p: The format string.
+ * @params: The parameters struct.
+ * @ap: The argument pointer.
+ *
+ * Return: A new pointer within the format string after parsing the precision.
  */
 char *get_precision(char *p, params_t *params, va_list ap)
 {
