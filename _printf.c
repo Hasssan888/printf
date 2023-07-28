@@ -1,75 +1,46 @@
 #include "main.h"
-
 /**
- * _printf - Produces output according to a format.
- * @format: The format string containing the directives.
- *
- * Return: The number of characters printed
- *    (excluding the null byte used to end output to strings).
+ * _printf - is a function that selects the correct function to print.
+ * @format: identifier to look for.
+ * Return: the length of the string.
  */
-int _printf(const char *format, ...)
+int _printf(const char * const format, ...)
 {
+	convert_ma
+		tch m[] = {
+		{"%s", printf_string}, {"%c", printf_char},
+		{"%%", printf_37},
+		{"%i", printf_int}, {"%d", printf_dec}, {"%r", printf_srev},
+		{"%R", printf_rot13}, {"%b", printf_bin}, {"%u", printf_unsigned},
+		{"%o", printf_oct}, {"%x", printf_hex}, {"%X", printf_HEX},
+		{"%S", printf_exclusive_string}, {"%p", printf_pointer}
+	};
+
 	va_list args;
-	int count = 0;
-	char *str;
+	int i = 0, j, len = 0;
 
 	va_start(args, format);
-	while (*format)
+	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
+		return (-1);
+
+Here:
+	while (format[i] != '\0')
 	{
-		if (*format != '%')
+		j = 13;
+		while (j >= 0)
 		{
-			count += _putchar(*format);
-			format++;
-			continue;
+			if (m[j].id[0] == format[i] && m[j].id[1] == format[i + 1])
+			{
+				len += m[j].f(args);
+				i = i + 2;
+				goto Here;
+			}
+			j--;
 		}
-		format++;
-		switch (*format)
-		{
-			case 'c':
-				count += _putchar(va_arg(args, int));
-				break;
-			case 's':
-				str = va_arg(args, char *);
-				count += _puts(str);
-				break;
-			case 'd':
-		       	case 'i':
-				count += print_number(va_arg(args, int));
-				break;
-			case 'u':
-				count += print_unsigned(va_arg(args, unsigned int));
-				break;
-			case 'o':
-				count += print_octal(va_arg(args, unsigned int));
-				break;
-			case 'x':
-				count += print_hexadecimal(va_arg(args, unsigned int), 0);
-				break;
-			case 'X':
-				count += print_hexadecimal(va_arg(args, unsigned int), 1);
-				break;
-			case 'b':
-				print_binary(va_arg(args, unsigned int));
-				count += 8;
-				break;
-			case 'p':
-				count += print_address(va_arg(args, void *));
-				break;
-			case 'S':
-				count += print_non_printable_string(va_arg(args, char *));
-				break;
-			case 'r':
-				count += print_reversed_string(va_arg(args, char *));
-				break;
-			case 'R':
-				count += print_rot13_string(va_arg(args, char *));
-				break;
-			default:
-				count += _putchar('%');
-				count += _putchar('r');
-		}
-				format++;
+		_putchar(format[i]);
+		len++;
+		i++;
 	}
-		va_end(args);
-		return (count);
+	va_end(args);
+	return (len);
 }
